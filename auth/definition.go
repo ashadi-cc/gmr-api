@@ -1,19 +1,20 @@
 package auth
 
 import (
+	"api-gmr/env"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
 const (
-	AppName   = "API_GMR"
-	SecretKey = "gmr-0098xdxdd"
+	AppName = "API_GMR"
 )
 
 var (
 	ExpiredDuration  = time.Duration(1) * time.Hour
 	JwtSigningMethod = jwt.SigningMethodHS256
+	SecretKey        = env.GetValue("JWT_SECRET", "abcd")
 	JwtSignatureKey  = []byte(SecretKey)
 )
 
