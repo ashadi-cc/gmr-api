@@ -119,14 +119,14 @@ func TestClaimToUser(t *testing.T) {
 			args: args{
 				claim: jwt.MapClaims{
 					"user_id": float64(2),
-					"email":   "ashadi",
+					"email":   "ashadi@gmail.com",
 					"group":   "user",
 				},
 				user: &userTest{},
 			},
 			want: want{
 				id:    2,
-				email: "ashadi",
+				email: "ashadi@gmail.com",
 				group: "user",
 			},
 		},
