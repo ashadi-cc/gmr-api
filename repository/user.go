@@ -6,6 +6,8 @@ type UserModel interface {
 	GetEmail() string
 	GetPasswordHash() string
 	GetUserGroup() string
+	GetBlok() string
+	getName() string
 }
 
 type User interface {

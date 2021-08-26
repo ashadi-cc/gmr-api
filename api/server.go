@@ -1,7 +1,7 @@
 package api
 
 import (
-	"api-gmr/env"
+	"api-gmr/config"
 	"fmt"
 	"log"
 	"net/http"
@@ -11,7 +11,7 @@ import (
 func Run() {
 	r := newRouter()
 
-	port := env.GetValue("APP_PORT", "8080")
+	port := config.GetApp().AppPort
 	log.Println("Listening on port:", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), r))
 }
