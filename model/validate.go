@@ -16,9 +16,12 @@ var (
 func init() {
 	en := en.New()
 	uni = ut.New(en, en)
-
-	trans, _ = uni.GetTranslator("en")
-
 	validate = validator.New()
-	en_translations.RegisterDefaultTranslations(validate, trans)
+
+	var ok bool
+	trans, ok = uni.GetTranslator("en")
+	if ok {
+		en_translations.RegisterDefaultTranslations(validate, trans)
+	}
+
 }
