@@ -1,4 +1,4 @@
-## Simple JWT API Auth
+## Simple API with jwt token auth
 - cp .env-example .env 
 - make server
 
