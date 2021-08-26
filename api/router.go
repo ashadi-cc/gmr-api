@@ -3,6 +3,7 @@ package api
 import (
 	"api-gmr/api/controller"
 	"api-gmr/api/middleware"
+	"api-gmr/service"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -26,6 +27,6 @@ func addRouters(r *mux.Router) {
 }
 
 func addLoginRouter(r *mux.Router) {
-	c := controller.NewLogin()
-	r.HandleFunc("/login", c.PostLogin).Methods(http.MethodPost)
+	c := controller.NewLogin(service.NewAuthService())
+	r.HandleFunc("/login", c.Authenticate).Methods(http.MethodPost)
 }

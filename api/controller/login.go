@@ -2,17 +2,22 @@ package controller
 
 import (
 	"api-gmr/model"
+	"api-gmr/service"
 	"encoding/json"
 	"net/http"
 )
 
-type Login struct{}
-
-func NewLogin() *Login {
-	return &Login{}
+type Login struct {
+	authService service.AuthService
 }
 
-func (l Login) PostLogin(w http.ResponseWriter, r *http.Request) {
+func NewLogin(authService service.AuthService) *Login {
+	return &Login{
+		authService: authService,
+	}
+}
+
+func (l Login) Authenticate(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var userLogin model.UserLogin
@@ -30,6 +35,24 @@ func (l Login) PostLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//validate user
+	user, err := l.authService.Validate(userLogin)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		data := model.CommonMessage{Success: false, Message: err.Error()}
+		json.NewEncoder(w).Encode(data)
+		return
+	}
+
+	//create token
+	tokenString, err := l.authService.CreateToken(user)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		data := model.CommonMessage{Success: false, Message: err.Error()}
+		json.NewEncoder(w).Encode(data)
+		return
+	}
+
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]bool{"ok": true})
+	json.NewEncoder(w).Encode(model.CommonMessage{Success: true, Data: tokenString})
 }
