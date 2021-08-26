@@ -26,7 +26,7 @@ func (u user) GetPasswordHash() string {
 	return u.passwordHash
 }
 
-func (u user) GetUserGroup() string {
+func (u user) GetGroup() string {
 	return u.userGroup
 }
 

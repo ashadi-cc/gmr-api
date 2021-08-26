@@ -1,6 +1,7 @@
 package service
 
 import (
+	"api-gmr/auth"
 	"api-gmr/model"
 	"api-gmr/repository"
 	"api-gmr/repository/mysql"
@@ -11,6 +12,7 @@ import (
 
 type IUserService interface {
 	UserInfo(userID int) (model.User, error)
+	UpdateUser(user model.User) error
 }
 
 type UserService struct {
@@ -28,17 +30,37 @@ func (service *UserService) UserInfo(userID int) (model.User, error) {
 
 	dbUser, err := service.userRepo.FindByUserID(context.Background(), userID)
 	if err != nil {
-		log.Println("failed when execute query", err.Error())
+		log.Println(err.Error())
 		return user, fmt.Errorf("internal server error")
 	}
 
 	user = model.User{
 		Id:       dbUser.GetUserID(),
 		Email:    dbUser.GetEmail(),
-		Group:    dbUser.GetUserGroup(),
+		Group:    dbUser.GetGroup(),
 		Username: dbUser.GetUsername(),
 		Blok:     dbUser.GetBlok(),
 		Name:     dbUser.GetName(),
 	}
 	return user, nil
+}
+
+func (service *UserService) UpdateUser(user model.User) error {
+	if user.Password != "" {
+		hashPasword, err := auth.HashPassword(user.Password)
+		if err != nil {
+			log.Println(err.Error())
+			return fmt.Errorf("internal server error")
+		}
+
+		user.Password = hashPasword
+	}
+
+	err := service.userRepo.UpdateEmailandPassword(context.Background(), user)
+	if err != nil {
+		log.Println(err.Error())
+		return fmt.Errorf("internal server error")
+	}
+
+	return nil
 }

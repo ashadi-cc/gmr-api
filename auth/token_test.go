@@ -14,7 +14,7 @@ type userTest struct {
 	Group string
 }
 
-func (user userTest) GetUserId() int {
+func (user userTest) GetUserID() int {
 	return user.Id
 }
 
@@ -135,7 +135,7 @@ func TestClaimToUser(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			ClaimToUser(tt.args.claim, tt.args.user)
-			assert.Equal(t, tt.want.id, tt.args.user.GetUserId())
+			assert.Equal(t, tt.want.id, tt.args.user.GetUserID())
 			assert.Equal(t, tt.want.email, tt.args.user.GetEmail())
 			assert.Equal(t, tt.want.group, tt.args.user.GetGroup())
 		})

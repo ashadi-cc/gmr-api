@@ -47,7 +47,7 @@ func (service *AuthService) Validate(data model.UserLogin) (model.User, error) {
 	user = model.User{
 		Id:    dbUser.GetUserID(),
 		Email: dbUser.GetEmail(),
-		Group: dbUser.GetUserGroup(),
+		Group: dbUser.GetGroup(),
 	}
 
 	return user, nil

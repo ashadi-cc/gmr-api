@@ -9,7 +9,7 @@ import (
 )
 
 type UserInterface interface {
-	GetUserId() int
+	GetUserID() int
 	GetEmail() string
 	GetGroup() string
 	SetUserId(id int)
@@ -23,7 +23,7 @@ func CreateToken(user UserInterface) (string, error) {
 			Issuer:    AppName,
 			ExpiresAt: time.Now().Add(ExpiredDuration).Unix(),
 		},
-		UserId: user.GetUserId(),
+		UserId: user.GetUserID(),
 		Email:  user.GetEmail(),
 		Group:  user.GetGroup(),
 	}

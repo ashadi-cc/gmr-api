@@ -79,5 +79,27 @@ func (repo userRepo) FindByUserID(ctx context.Context, userID int) (repository.U
 }
 
 func (repo userRepo) UpdateEmailandPassword(ctx context.Context, user repository.UserModel) error {
+	var updatedFields []string
+	var args []interface{}
+
+	args = append(args, user.GetEmail())
+	updatedFields = append(updatedFields, "email = ?")
+
+	if user.GetPasswordHash() != "" {
+		args = append(args, user.GetPasswordHash())
+		updatedFields = append(updatedFields, "password = ?")
+	}
+
+	args = append(args, user.GetUserID())
+	query := fmt.Sprintf("UPDATE users SET %s WHERE id = ?", strings.Join(updatedFields, ","))
+	statement, err := repo.db.PrepareContext(ctx, query)
+	if err != nil {
+		return errors.Wrapf(err, "failed preparing query: %s", query)
+	}
+	defer statement.Close()
+
+	if _, err = statement.ExecContext(ctx, args...); err != nil {
+		return errors.Wrap(err, "failed to update user")
+	}
 	return nil
 }
