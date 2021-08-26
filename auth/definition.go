@@ -12,7 +12,7 @@ const (
 )
 
 var (
-	ExpiredDuration  = time.Duration(1) * time.Hour
+	ExpiredDuration  = time.Duration(24*365) * time.Hour
 	JwtSigningMethod = jwt.SigningMethodHS256
 	SecretKey        = env.GetValue("JWT_SECRET", "abcd")
 	JwtSignatureKey  = []byte(SecretKey)
