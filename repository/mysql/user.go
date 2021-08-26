@@ -36,7 +36,7 @@ func (repo userRepo) FindByUsername(ctx context.Context, username string) (repos
 	query := fmt.Sprintf("SELECT %s FROM users WHERE username = ?", strings.Join(repo.selectFields(), ","))
 	statement, err := repo.db.PrepareContext(ctx, query)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed preparing query: %s", statement)
+		return nil, errors.Wrapf(err, "failed preparing query: %s", query)
 	}
 	defer statement.Close()
 
@@ -59,7 +59,7 @@ func (repo userRepo) FindByUserID(ctx context.Context, userID int) (repository.U
 	query := fmt.Sprintf("SELECT %s FROM users WHERE id = ?", strings.Join(repo.selectFields(), ","))
 	statement, err := repo.db.PrepareContext(ctx, query)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed preparing query: %s", statement)
+		return nil, errors.Wrapf(err, "failed preparing query: %s", query)
 	}
 	defer statement.Close()
 
