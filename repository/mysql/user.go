@@ -73,7 +73,7 @@ func (repo userRepo) FindByUserID(ctx context.Context, userID int) (repository.U
 		&u.name,
 	)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "failed scanning row")
 	}
 	return u, nil
 }
