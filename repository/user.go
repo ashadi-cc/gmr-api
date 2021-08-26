@@ -1,5 +1,7 @@
 package repository
 
+import "context"
+
 type UserModel interface {
 	GetUserID() int
 	GetUsername() string
@@ -7,10 +9,11 @@ type UserModel interface {
 	GetPasswordHash() string
 	GetUserGroup() string
 	GetBlok() string
-	getName() string
+	GetName() string
 }
 
 type User interface {
-	FindByUsername(username string) (UserModel, error)
-	UpdateEmailandPassword(user UserModel) error
+	FindByUsername(ctx context.Context, username string) (UserModel, error)
+	FindByUserID(ctx context.Context, userID int) (UserModel, error)
+	UpdateEmailandPassword(ctx context.Context, user UserModel) error
 }

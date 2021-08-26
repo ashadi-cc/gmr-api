@@ -1,9 +1,12 @@
 package model
 
 type User struct {
-	Id    int
-	Email string
-	Group string
+	Id       int    `json:"-"`
+	Email    string `json:"email"`
+	Group    string `json:"-"`
+	Username string `json:"username"`
+	Blok     string `json:"blok"`
+	Name     string `json:"name"`
 }
 
 func (user User) GetUserId() int {

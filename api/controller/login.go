@@ -47,7 +47,7 @@ func (l Login) Authenticate(w http.ResponseWriter, r *http.Request) {
 	//create token
 	tokenString, err := l.authService.CreateToken(user)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
 		data := model.CommonMessage{Success: false, Message: err.Error()}
 		json.NewEncoder(w).Encode(data)
 		return

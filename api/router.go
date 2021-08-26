@@ -24,9 +24,15 @@ func addMiddleware(r *mux.Router) {
 
 func addRouters(r *mux.Router) {
 	addLoginRouter(r)
+	addUserRouter(r)
 }
 
 func addLoginRouter(r *mux.Router) {
 	c := controller.NewLogin(service.NewAuthService())
 	r.HandleFunc("/login", c.Authenticate).Methods(http.MethodPost)
+}
+
+func addUserRouter(r *mux.Router) {
+	c := controller.NewUser(service.NewUserService())
+	r.HandleFunc("/user-info", c.Info).Methods(http.MethodGet)
 }

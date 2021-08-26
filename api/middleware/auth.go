@@ -4,6 +4,7 @@ import (
 	"api-gmr/auth"
 	"api-gmr/model"
 	"context"
+	"log"
 	"net/http"
 	"strings"
 )
@@ -27,7 +28,7 @@ func Auth(next http.Handler) http.Handler {
 
 		authHeader := r.Header.Get(AuthHeaderKey)
 		if !strings.HasPrefix(authHeader, BearerKey) {
-			http.Error(w, "Invalid token", http.StatusBadRequest)
+			http.Error(w, "invalid token", http.StatusBadRequest)
 			return
 		}
 
@@ -35,14 +36,15 @@ func Auth(next http.Handler) http.Handler {
 
 		claims, err := auth.ValidateToken(tokenString)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			log.Println(err)
+			http.Error(w, "invalid token", http.StatusBadRequest)
 			return
 		}
 
-		user := &model.User{}
-		auth.ClaimToUser(claims, user)
+		user := model.User{}
+		auth.ClaimToUser(claims, &user)
 
-		ctx := context.WithValue(r.Context(), UserKey, *user)
+		ctx := context.WithValue(r.Context(), UserKey, user)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

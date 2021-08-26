@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/pkg/errors"
 )
 
 type UserInterface interface {
@@ -34,7 +35,7 @@ func CreateToken(user UserInterface) (string, error) {
 
 	signedToken, err := token.SignedString(JwtSignatureKey)
 	if err != nil {
-		return "", err
+		return "", errors.Wrap(err, "can't create token")
 	}
 
 	return signedToken, nil
@@ -54,7 +55,7 @@ func ValidateToken(tokenString string) (jwt.MapClaims, error) {
 	})
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "token is invalid")
 	}
 
 	claim, ok := token.Claims.(jwt.MapClaims)

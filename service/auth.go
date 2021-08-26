@@ -5,6 +5,8 @@ import (
 	"api-gmr/model"
 	"api-gmr/repository"
 	"api-gmr/repository/mysql"
+	"context"
+	"database/sql"
 	"fmt"
 	"log"
 )
@@ -27,10 +29,14 @@ func NewAuthService() IAuthService {
 func (service *AuthService) Validate(data model.UserLogin) (model.User, error) {
 	var user model.User
 
-	dbUser, err := service.userRepo.FindByUsername(data.Username)
+	dbUser, err := service.userRepo.FindByUsername(context.Background(), data.Username)
 	if err != nil {
-		log.Println(err.Error())
-		return user, fmt.Errorf("could not find username")
+		if err == sql.ErrNoRows {
+			return user, fmt.Errorf("could not find username")
+		}
+
+		log.Println(err)
+		return user, fmt.Errorf("internal server error")
 	}
 
 	//validate password
@@ -50,7 +56,7 @@ func (service *AuthService) Validate(data model.UserLogin) (model.User, error) {
 func (service *AuthService) CreateToken(user model.User) (string, error) {
 	tokenString, err := auth.CreateToken(&user)
 	if err != nil {
-		log.Printf("failed created token with error: %s \n", err.Error())
+		log.Println(err)
 		return "", fmt.Errorf("internal Server Error")
 	}
 	return tokenString, nil
