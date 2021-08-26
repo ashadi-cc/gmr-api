@@ -8,10 +8,10 @@ import (
 )
 
 type Login struct {
-	authService service.AuthService
+	authService service.IAuthService
 }
 
-func NewLogin(authService service.AuthService) *Login {
+func NewLogin(authService service.IAuthService) *Login {
 	return &Login{
 		authService: authService,
 	}
