@@ -8,10 +8,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type Controller interface {
-	HandleFunc(w http.ResponseWriter, r *http.Request)
-}
-
 func newRouter() *mux.Router {
 	r := mux.NewRouter()
 	addMiddleware(r)
@@ -26,9 +22,10 @@ func addMiddleware(r *mux.Router) {
 }
 
 func addRouters(r *mux.Router) {
-	addRouter(r, controller.NewLogin(), "/login", http.MethodPost)
+	addLoginRouter(r)
 }
 
-func addRouter(r *mux.Router, c Controller, path string, methods ...string) {
-	r.HandleFunc(path, c.HandleFunc).Methods(methods...)
+func addLoginRouter(r *mux.Router) {
+	c := controller.NewLogin()
+	r.HandleFunc("/login", c.PostLogin).Methods(http.MethodPost)
 }

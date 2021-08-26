@@ -12,7 +12,7 @@ func NewLogin() *Login {
 	return &Login{}
 }
 
-func (l Login) HandleFunc(w http.ResponseWriter, r *http.Request) {
+func (l Login) PostLogin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var userLogin model.UserLogin
