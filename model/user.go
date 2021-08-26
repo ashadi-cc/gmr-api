@@ -52,7 +52,7 @@ func (user *User) SetGroup(group string) {
 
 type UserInput struct {
 	Email    string `json:"email" validate:"email,required"`
-	Password string `json:"password" validate:"required"`
+	Password string `json:"password"`
 }
 
 func (user UserInput) Validate() error {
