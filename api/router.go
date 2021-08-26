@@ -35,5 +35,5 @@ func addLoginRouter(r *mux.Router) {
 func addUserRouter(r *mux.Router) {
 	c := controller.NewUser(service.NewUserService())
 	r.HandleFunc("/user-info", c.Info).Methods(http.MethodGet)
-	r.HandleFunc("user-update", c.Update).Methods(http.MethodPost)
+	r.HandleFunc("/user-update", c.Update).Methods(http.MethodPost)
 }
