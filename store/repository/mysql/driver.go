@@ -1,8 +1,8 @@
 package mysql
 
 import (
-	"api-gmr/repository"
 	"api-gmr/store"
+	"api-gmr/store/repository"
 )
 
 type Driver struct{}

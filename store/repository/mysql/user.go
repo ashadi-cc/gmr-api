@@ -1,7 +1,7 @@
 package mysql
 
 import (
-	"api-gmr/repository"
+	"api-gmr/store/repository"
 	"context"
 	"database/sql"
 	"fmt"

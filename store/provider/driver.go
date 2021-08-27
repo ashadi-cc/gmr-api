@@ -1,6 +1,6 @@
 package provider
 
-import "api-gmr/repository"
+import "api-gmr/store/repository"
 
 type Driver interface {
 	GetUserRepository() repository.User
