@@ -4,7 +4,6 @@ import (
 	"api-gmr/auth"
 	"api-gmr/model"
 	"api-gmr/repository"
-	"api-gmr/repository/mysql"
 	"api-gmr/util"
 	"context"
 	"database/sql"
@@ -24,7 +23,7 @@ type AuthService struct {
 
 func NewAuthService() IAuthService {
 	return &AuthService{
-		userRepo: mysql.NewUserRepo(),
+		userRepo: repo().GetUserRepository(),
 	}
 }
 

@@ -15,6 +15,7 @@ type App struct {
 	DbUser     string
 	DbPassword string
 	DbName     string
+	DbDriver   string
 	JwtSecret  string
 }
 
@@ -34,6 +35,7 @@ func init() {
 		DbUser:     env.GetValue("DB_USER", "user"),
 		DbPassword: env.GetValue("DB_PASSWORD", "password"),
 		DbName:     env.GetValue("DB_NAME", "dbname"),
+		DbDriver:   env.GetValue("DB_DRIVER", "mysql"),
 		JwtSecret:  env.GetValue("JWT_SECRET", "jwt-secret-007"),
 	}
 }
