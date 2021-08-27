@@ -5,12 +5,12 @@ import (
 	"api-gmr/store/repository"
 )
 
-type Driver struct{}
+type MysqlDriver struct{}
 
-func (d Driver) GetUserRepository() repository.User {
+func (d MysqlDriver) GetUserRepository() repository.User {
 	return NewUserRepo()
 }
 
 func init() {
-	store.Register("mysql", &Driver{})
+	store.Register("mysql", &MysqlDriver{})
 }
