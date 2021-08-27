@@ -3,6 +3,7 @@ package controller
 import (
 	"api-gmr/model"
 	"api-gmr/service"
+	"api-gmr/util"
 	"encoding/json"
 	"net/http"
 )
@@ -23,33 +24,28 @@ func (l Login) Authenticate(w http.ResponseWriter, r *http.Request) {
 	var userLogin model.UserLogin
 	err := json.NewDecoder(r.Body).Decode(&userLogin)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(model.CommonMessage{Message: "invalid payload"})
+		userError := util.NewUserError(http.StatusBadRequest, "invalid payload", err)
+		util.PrintUserError(w, userError)
 		return
 	}
 
 	if err := userLogin.Validate(); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		data := model.CommonMessage{Success: false, Message: "invalid payload"}.WithError(err)
-		json.NewEncoder(w).Encode(data)
+		userError := util.NewUserError(http.StatusBadRequest, "invalid payload", err)
+		util.PrintUserError(w, userError)
 		return
 	}
 
 	//validate user
 	user, err := l.authService.Validate(userLogin)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		data := model.CommonMessage{Success: false, Message: err.Error()}
-		json.NewEncoder(w).Encode(data)
+		util.PrintUserError(w, err)
 		return
 	}
 
 	//create token
 	tokenString, err := l.authService.CreateToken(user)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		data := model.CommonMessage{Success: false, Message: err.Error()}
-		json.NewEncoder(w).Encode(data)
+		util.PrintUserError(w, err)
 		return
 	}
 

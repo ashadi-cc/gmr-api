@@ -5,10 +5,12 @@ import (
 	"api-gmr/model"
 	"api-gmr/repository"
 	"api-gmr/repository/mysql"
+	"api-gmr/util"
 	"context"
 	"database/sql"
-	"fmt"
-	"log"
+	"net/http"
+
+	"github.com/pkg/errors"
 )
 
 type IAuthService interface {
@@ -31,17 +33,16 @@ func (service *AuthService) Validate(data model.UserLogin) (model.User, error) {
 
 	dbUser, err := service.userRepo.FindByUsername(context.Background(), data.Username)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return user, fmt.Errorf("could not find username")
+		if cause := errors.Cause(err); cause == sql.ErrNoRows {
+			return user, util.NewUserError(http.StatusBadRequest, "username not found", err)
 		}
 
-		log.Println(err)
-		return user, fmt.Errorf("internal server error")
+		return user, err
 	}
 
 	//validate password
 	if !auth.CheckPasswordHash(data.Password, dbUser.GetPasswordHash()) {
-		return user, fmt.Errorf("invalid password")
+		return user, util.NewUserError(http.StatusBadRequest, "invalid password", nil)
 	}
 
 	user = model.User{
@@ -55,9 +56,5 @@ func (service *AuthService) Validate(data model.UserLogin) (model.User, error) {
 
 func (service *AuthService) CreateToken(user model.User) (string, error) {
 	tokenString, err := auth.CreateToken(&user)
-	if err != nil {
-		log.Println(err)
-		return "", fmt.Errorf("internal Server Error")
-	}
-	return tokenString, nil
+	return tokenString, err
 }

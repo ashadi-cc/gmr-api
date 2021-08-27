@@ -5,9 +5,12 @@ import (
 	"api-gmr/model"
 	"api-gmr/repository"
 	"api-gmr/repository/mysql"
+	"api-gmr/util"
 	"context"
-	"fmt"
-	"log"
+	"database/sql"
+	"net/http"
+
+	"github.com/pkg/errors"
 )
 
 type IUserService interface {
@@ -30,8 +33,10 @@ func (service *UserService) UserInfo(userID int) (model.User, error) {
 
 	dbUser, err := service.userRepo.FindByUserID(context.Background(), userID)
 	if err != nil {
-		log.Println(err.Error())
-		return user, fmt.Errorf("internal server error")
+		if cause := errors.Cause(err); cause == sql.ErrNoRows {
+			return user, util.NewUserError(http.StatusBadRequest, "user id not found", err)
+		}
+		return user, err
 	}
 
 	user = model.User{
@@ -49,18 +54,12 @@ func (service *UserService) UpdateUser(user model.User) error {
 	if user.Password != "" {
 		hashPasword, err := auth.HashPassword(user.Password)
 		if err != nil {
-			log.Println(err.Error())
-			return fmt.Errorf("internal server error")
+			return err
 		}
 
 		user.Password = hashPasword
 	}
 
 	err := service.userRepo.UpdateEmailandPassword(context.Background(), user)
-	if err != nil {
-		log.Println(err.Error())
-		return fmt.Errorf("internal server error")
-	}
-
-	return nil
+	return err
 }

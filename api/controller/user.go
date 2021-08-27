@@ -4,7 +4,9 @@ import (
 	"api-gmr/api/middleware"
 	"api-gmr/model"
 	"api-gmr/service"
+	"api-gmr/util"
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -23,17 +25,13 @@ func (u User) Info(w http.ResponseWriter, r *http.Request) {
 
 	userCtx, ok := r.Context().Value(middleware.UserKey).(model.User)
 	if !ok {
-		w.WriteHeader(http.StatusInternalServerError)
-		data := model.CommonMessage{Success: false, Message: "internal server error"}
-		json.NewEncoder(w).Encode(data)
+		util.PrintUserError(w, fmt.Errorf("can't load user from context"))
 		return
 	}
 
 	userInfo, err := u.userService.UserInfo(userCtx.Id)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		data := model.CommonMessage{Success: false, Message: "internal server error"}
-		json.NewEncoder(w).Encode(data)
+		util.PrintUserError(w, err)
 		return
 	}
 
@@ -47,24 +45,21 @@ func (u User) Update(w http.ResponseWriter, r *http.Request) {
 
 	userCtx, ok := r.Context().Value(middleware.UserKey).(model.User)
 	if !ok {
-		w.WriteHeader(http.StatusInternalServerError)
-		data := model.CommonMessage{Success: false, Message: "internal server error"}
-		json.NewEncoder(w).Encode(data)
+		util.PrintUserError(w, fmt.Errorf("can't load user from context"))
 		return
 	}
 
 	var userInput model.UserInput
 	err := json.NewDecoder(r.Body).Decode(&userInput)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(model.CommonMessage{Message: "invalid payload"})
+		userError := util.NewUserError(http.StatusBadRequest, "invalid payload", err)
+		util.PrintUserError(w, userError)
 		return
 	}
 
 	if err := userInput.Validate(); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		data := model.CommonMessage{Success: false, Message: "invalid payload"}.WithError(err)
-		json.NewEncoder(w).Encode(data)
+		userError := util.NewUserError(http.StatusBadRequest, "invalid payload", err)
+		util.PrintUserError(w, userError)
 		return
 	}
 
@@ -72,9 +67,7 @@ func (u User) Update(w http.ResponseWriter, r *http.Request) {
 	userCtx.Password = userInput.Password
 
 	if err = u.userService.UpdateUser(userCtx); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		data := model.CommonMessage{Success: false, Message: "internal server error"}
-		json.NewEncoder(w).Encode(data)
+		util.PrintUserError(w, err)
 		return
 	}
 
