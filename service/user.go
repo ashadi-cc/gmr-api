@@ -3,7 +3,7 @@ package service
 import (
 	"api-gmr/auth"
 	"api-gmr/model"
-	"api-gmr/repository"
+	"api-gmr/store/repository"
 	"api-gmr/util"
 	"context"
 	"database/sql"

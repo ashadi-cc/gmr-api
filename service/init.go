@@ -6,7 +6,7 @@ import (
 	"api-gmr/store/provider"
 
 	//register repo driver
-	_ "api-gmr/repository/mysql"
+	_ "api-gmr/store/repository/mysql"
 )
 
 func repo() provider.Driver {
