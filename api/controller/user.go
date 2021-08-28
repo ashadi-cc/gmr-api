@@ -10,16 +10,19 @@ import (
 	"net/http"
 )
 
+//User represents User Controller
 type User struct {
 	userService service.IUserService
 }
 
+//NewUser returns new User instance
 func NewUser(userService service.IUserService) *User {
 	return &User{
 		userService: userService,
 	}
 }
 
+//Info repesents User.Info handler
 func (u User) Info(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 

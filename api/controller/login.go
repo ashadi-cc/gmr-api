@@ -8,16 +8,19 @@ import (
 	"net/http"
 )
 
+//Login represents Login controller
 type Login struct {
 	authService service.IAuthService
 }
 
+//NewLogin returns new Login instance
 func NewLogin(authService service.IAuthService) *Login {
 	return &Login{
 		authService: authService,
 	}
 }
 
+//Authenticate represents Authenticate handler
 func (l Login) Authenticate(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
