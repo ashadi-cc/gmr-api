@@ -9,6 +9,7 @@ import (
 	_ "api-gmr/store/repository/mysql"
 )
 
+//load repo driver instance by given app driver configuration
 func repo() provider.Driver {
 	driver, err := store.Open(config.GetApp().DbDriver)
 	if err != nil {
