@@ -2,33 +2,42 @@ package service
 
 import (
 	"api-gmr/auth"
+	"api-gmr/config"
 	"api-gmr/model"
 	"api-gmr/store/repository"
 	"api-gmr/util"
 	"context"
 	"database/sql"
 	"net/http"
+	"time"
 
 	"github.com/pkg/errors"
 )
 
 //IUserService represents a service for user methods
 type IUserService interface {
+
 	//UserInfo returns model.User by given userID
 	UserInfo(userID int) (model.User, error)
+
 	//UpdateUser method for update users by given user model payload.
 	UpdateUser(user model.User) error
+
+	//GetBilling returns billings for particular user
+	GetBilling(user model.User) (model.BillingInfo, error)
 }
 
 //UserService impelmenting IUserService
 type UserService struct {
 	userRepo repository.User
+	billRepo repository.Billing
 }
 
 //NewUserService return a new UserService instance
 func NewUserService() IUserService {
 	return &UserService{
 		userRepo: repo().GetUserRepository(),
+		billRepo: repo().GetBillingRepository(),
 	}
 }
 
@@ -68,4 +77,32 @@ func (service *UserService) UpdateUser(user model.User) error {
 
 	err := service.userRepo.UpdateEmailandPassword(context.Background(), user)
 	return err
+}
+
+//GetBilling implementing IUserService.GetBilling
+func (service *UserService) GetBilling(user model.User) (model.BillingInfo, error) {
+	var bInfo model.BillingInfo
+
+	localTime, err := util.TimeIn(time.Now(), config.GetApp().TimeZone)
+	if err != nil {
+		return bInfo, errors.Wrap(err, "unable to load local timezone")
+	}
+
+	billingFilter := model.BillingFilter{
+		Year:   localTime.Year(),
+		Month:  int(localTime.Month()),
+		UserID: user.GetUserID(),
+		Status: "B",
+	}
+
+	thisMonth, err := service.billRepo.GetBillWithFilter(context.Background(), billingFilter)
+	if err != nil {
+		return bInfo, err
+	}
+
+	bInfo = model.BillingInfo{
+		ThisMonth: model.BillRepoToBilling(thisMonth),
+	}
+
+	return bInfo, nil
 }

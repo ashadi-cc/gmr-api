@@ -7,7 +7,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-//App to hold common application configiguration
+//App to hold common application configuration
 type App struct {
 	//AppName application name
 	AppName string
@@ -27,6 +27,8 @@ type App struct {
 	DbDriver string
 	//JwtSecret secret key for signing jwt token
 	JwtSecret string
+	//Timezone timezone app
+	TimeZone string
 }
 
 var app App
@@ -47,10 +49,11 @@ func init() {
 		DbName:     env.GetValue("DB_NAME", "dbname"),
 		DbDriver:   env.GetValue("DB_DRIVER", "mysql"),
 		JwtSecret:  env.GetValue("JWT_SECRET", "jwt-secret-007"),
+		TimeZone:   env.GetValue("TIMEZONE", "Asia/Jakarta"),
 	}
 }
 
-//GetApp returns application configuration
+//GetApp returns a new App instance
 func GetApp() App {
 	return app
 }
