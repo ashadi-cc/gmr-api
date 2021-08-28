@@ -14,14 +14,14 @@ import (
 
 //IAuthService represents a service for Authenticate user
 type IAuthService interface {
-	//Validate validate user by given username and password value.
+	//Validate validate user by given username and password from model.User
 	Validate(user model.UserLogin) (model.User, error)
 
-	//CreateToken create new token by given user payload
+	//CreateToken create new string token by given user payload
 	CreateToken(user model.User) (string, error)
 }
 
-//AuthService implementing service.IAuthService
+//AuthService implementing IAuthService
 type AuthService struct {
 	userRepo repository.User
 }

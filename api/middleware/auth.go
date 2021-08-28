@@ -9,16 +9,21 @@ import (
 	"strings"
 )
 
+//ContextKey represents context data type
 type ContextKey string
 
 const (
-	UserKey       ContextKey = "user"
-	LoginPath     string     = "/login"
-	AuthHeaderKey string     = "Authorization"
-	BearerKey     string     = "Bearer"
+	//UserKey represents user context key
+	UserKey ContextKey = "user"
+	//LoginPath represents login route path
+	LoginPath string = "/login"
+	//AuthHeaderKey represents Authorization header key value
+	AuthHeaderKey string = "Authorization"
+	//BearerKey represents token header key method
+	BearerKey string = "Bearer"
 )
 
-// Auth Authenticate user with jwt-token
+// Auth represents middleware with validate jwt-token.
 func Auth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == LoginPath {

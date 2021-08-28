@@ -12,21 +12,27 @@ import (
 	"github.com/pkg/errors"
 )
 
+//IUserService represents a service for user methods
 type IUserService interface {
+	//UserInfo returns model.User by given userID
 	UserInfo(userID int) (model.User, error)
+	//UpdateUser method for update users by given user model payload.
 	UpdateUser(user model.User) error
 }
 
+//UserService impelmenting IUserService
 type UserService struct {
 	userRepo repository.User
 }
 
+//NewUserService return a new UserService instance
 func NewUserService() IUserService {
 	return &UserService{
 		userRepo: repo().GetUserRepository(),
 	}
 }
 
+//UserInfo impelemnting IUserService.UserINfo
 func (service *UserService) UserInfo(userID int) (model.User, error) {
 	var user model.User
 
@@ -49,6 +55,7 @@ func (service *UserService) UserInfo(userID int) (model.User, error) {
 	return user, nil
 }
 
+//UpdateUser implementing IUserService.UpdateUser
 func (service *UserService) UpdateUser(user model.User) error {
 	if user.Password != "" {
 		hashPasword, err := auth.HashPassword(user.Password)

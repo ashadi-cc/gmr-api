@@ -22,7 +22,7 @@ func NewUser(userService service.IUserService) *User {
 	}
 }
 
-//Info repesents User.Info handler
+//Info User info handler method
 func (u User) Info(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -43,6 +43,7 @@ func (u User) Info(w http.ResponseWriter, r *http.Request) {
 
 }
 
+//Update User updatede hander method
 func (u User) Update(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 

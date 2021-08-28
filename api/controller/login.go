@@ -20,7 +20,7 @@ func NewLogin(authService service.IAuthService) *Login {
 	}
 }
 
-//Authenticate represents Authenticate handler
+//Authenticate Authenticate handler
 func (l Login) Authenticate(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
