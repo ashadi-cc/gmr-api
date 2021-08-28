@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-// Run api
+//Run run api server
 func Run() {
 	r := newRouter()
 

@@ -12,21 +12,28 @@ import (
 	"github.com/pkg/errors"
 )
 
+//IAuthService represents a service for Authenticate user
 type IAuthService interface {
+	//Validate validate user by given username and password from model.User
 	Validate(user model.UserLogin) (model.User, error)
+
+	//CreateToken create new string token by given user payload
 	CreateToken(user model.User) (string, error)
 }
 
+//AuthService implementing IAuthService
 type AuthService struct {
 	userRepo repository.User
 }
 
+//NewAuthService returns new a AuthService instance
 func NewAuthService() IAuthService {
 	return &AuthService{
 		userRepo: repo().GetUserRepository(),
 	}
 }
 
+//Validate implementing IAuthService.Validate
 func (service *AuthService) Validate(data model.UserLogin) (model.User, error) {
 	var user model.User
 
@@ -53,6 +60,7 @@ func (service *AuthService) Validate(data model.UserLogin) (model.User, error) {
 	return user, nil
 }
 
+//CreateToken impelmenting IAuthService.CreateToken
 func (service *AuthService) CreateToken(user model.User) (string, error) {
 	tokenString, err := auth.CreateToken(&user)
 	return tokenString, err

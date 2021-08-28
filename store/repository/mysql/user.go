@@ -14,6 +14,7 @@ type userRepo struct {
 	db *sql.DB
 }
 
+//NewUserRepo returns a new instance of repository.User
 func NewUserRepo() repository.User {
 	return &userRepo{
 		db: getDB(),
@@ -32,6 +33,7 @@ func (repo userRepo) selectFields() []string {
 	return fields
 }
 
+//FindByUsername impelementing repository.User.FindByUsername
 func (repo userRepo) FindByUsername(ctx context.Context, username string) (repository.UserModel, error) {
 	query := fmt.Sprintf("SELECT %s FROM users WHERE username = ?", strings.Join(repo.selectFields(), ","))
 	statement, err := repo.db.PrepareContext(ctx, query)
@@ -55,6 +57,7 @@ func (repo userRepo) FindByUsername(ctx context.Context, username string) (repos
 	return u, nil
 }
 
+//FindByUserID impelementing repository.User.FindByUserID
 func (repo userRepo) FindByUserID(ctx context.Context, userID int) (repository.UserModel, error) {
 	query := fmt.Sprintf("SELECT %s FROM users WHERE id = ?", strings.Join(repo.selectFields(), ","))
 	statement, err := repo.db.PrepareContext(ctx, query)
@@ -78,6 +81,7 @@ func (repo userRepo) FindByUserID(ctx context.Context, userID int) (repository.U
 	return u, nil
 }
 
+//UpdateEmailandPassword impelementing repository.User.UpdateEmailandPassword
 func (repo userRepo) UpdateEmailandPassword(ctx context.Context, user repository.UserModel) error {
 	var updatedFields []string
 	var args []interface{}

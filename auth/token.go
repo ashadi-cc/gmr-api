@@ -8,6 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
+//UserInterface represents user methods interface
 type UserInterface interface {
 	GetUserID() int
 	GetEmail() string
@@ -17,6 +18,7 @@ type UserInterface interface {
 	SetGroup(group string)
 }
 
+//CreateToken returns string token by given user model
 func CreateToken(user UserInterface) (string, error) {
 	claim := Claim{
 		StandardClaims: jwt.StandardClaims{
@@ -41,6 +43,7 @@ func CreateToken(user UserInterface) (string, error) {
 	return signedToken, nil
 }
 
+//ValidateToken returns Jwt Claims by given token
 func ValidateToken(tokenString string) (jwt.MapClaims, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		method, ok := token.Method.(*jwt.SigningMethodHMAC)
@@ -66,6 +69,7 @@ func ValidateToken(tokenString string) (jwt.MapClaims, error) {
 	return claim, nil
 }
 
+//ClaimToUser set user field values from claim
 func ClaimToUser(claim jwt.MapClaims, user UserInterface) {
 	if userId, ok := claim["user_id"].(float64); ok {
 		user.SetUserId(int(userId))

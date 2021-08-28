@@ -8,13 +8,19 @@ import (
 )
 
 var (
-	AppName          = config.GetApp().AppName
-	ExpiredDuration  = time.Duration(24*365) * time.Hour
+	//AppName represents APP Name
+	AppName = config.GetApp().AppName
+	//ExpiredDuration token expired duration in hours
+	ExpiredDuration = time.Duration(24*365) * time.Hour
+	//JwtSigningMethod jwt signing method choose
 	JwtSigningMethod = jwt.SigningMethodHS256
-	SecretKey        = config.GetApp().JwtSecret
-	JwtSignatureKey  = []byte(SecretKey)
+	//SecretKey jwt secret key value
+	SecretKey = config.GetApp().JwtSecret
+	//JwtSignatureKey signature key from secret key
+	JwtSignatureKey = []byte(SecretKey)
 )
 
+//Claim containts common jwt standar claims and user data
 type Claim struct {
 	jwt.StandardClaims
 	UserId int    `json:"user_id"`

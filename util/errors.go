@@ -13,10 +13,12 @@ type userError struct {
 	code    int
 }
 
+//Error implementing error interface
 func (u userError) Error() string {
 	return u.message
 }
 
+//NewUserError returns a new userError instance by given values
 func NewUserError(code int, message string, err error) *userError {
 	if code == 0 {
 		code = http.StatusBadRequest
@@ -29,6 +31,7 @@ func NewUserError(code int, message string, err error) *userError {
 	}
 }
 
+//PrintUserError method for write common error to writer
 func PrintUserError(w http.ResponseWriter, err error) {
 	uError, ok := err.(*userError)
 	if ok {

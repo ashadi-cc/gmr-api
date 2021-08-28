@@ -7,16 +7,26 @@ import (
 	"github.com/joho/godotenv"
 )
 
+//App to hold common application configiguration
 type App struct {
-	AppName    string
-	AppPort    string
-	DbHost     string
-	DbPort     string
-	DbUser     string
+	//AppName application name
+	AppName string
+	//AppPort port will be used for api sevice
+	AppPort string
+	//DbHost database host value
+	DbHost string
+	//DbPort database port value
+	DbPort string
+	//DbUser database user value
+	DbUser string
+	//DbPassword database password value
 	DbPassword string
-	DbName     string
-	DbDriver   string
-	JwtSecret  string
+	//DbName database name value
+	DbName string
+	//DbDriver database driver. available drivers: mysql
+	DbDriver string
+	//JwtSecret secret key for signing jwt token
+	JwtSecret string
 }
 
 var app App
@@ -40,6 +50,7 @@ func init() {
 	}
 }
 
+//GetApp returns application configuration
 func GetApp() App {
 	return app
 }
