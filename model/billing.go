@@ -1,7 +1,9 @@
 package model
 
 import (
+	"api-gmr/config"
 	"api-gmr/store/repository"
+	"fmt"
 )
 
 type BillingFilter struct {
@@ -64,9 +66,17 @@ type ItemBilling struct {
 	Total float64  `json:"total"`
 }
 
+type BillingPayment struct {
+	Name     string `json:"name"`
+	ImageURL string `json:"image_url"`
+}
+
+type BillingPayments []BillingPayment
+
 type BillingInfo struct {
-	ThisMonth ItemBilling `json:"this_month"`
-	OtherBill ItemBilling `json:"other_month"`
+	ThisMonth     ItemBilling     `json:"this_month"`
+	OtherBill     ItemBilling     `json:"other_month"`
+	PaymentMethod BillingPayments `json:"payment_method"`
 }
 
 func BillRepoToBilling(i []repository.BillingModel) Billings {
@@ -83,4 +93,23 @@ func BillRepoToBilling(i []repository.BillingModel) Billings {
 	}
 
 	return b
+}
+
+func PaymentRepoToPayments(p []repository.PaymentModel) BillingPayments {
+	var ps BillingPayments
+	for _, item := range p {
+		pi := BillingPayment{
+			Name:     item.GetName(),
+			ImageURL: paymentImageUrl(item.GetImage()),
+		}
+		ps = append(ps, pi)
+	}
+	return ps
+}
+
+func paymentImageUrl(img string) string {
+	if len(img) == 0 {
+		return ""
+	}
+	return fmt.Sprintf("%s/%s", config.GetBaseQrCodeURL(), img)
 }

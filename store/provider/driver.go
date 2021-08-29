@@ -9,4 +9,7 @@ type Driver interface {
 
 	//GetBillingRepository returns a new repository.User instance
 	GetBillingRepository() repository.Billing
+
+	//GetPaymentRepository returns a new repository.Payment instance
+	GetPaymentRepository() repository.Payment
 }

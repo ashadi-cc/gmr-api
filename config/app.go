@@ -29,6 +29,8 @@ type App struct {
 	JwtSecret string
 	//Timezone timezone app
 	TimeZone string
+	//BaseURL base domain url
+	BaseURL string
 }
 
 var app App
@@ -50,10 +52,18 @@ func init() {
 		DbDriver:   env.GetValue("DB_DRIVER", "mysql"),
 		JwtSecret:  env.GetValue("JWT_SECRET", "jwt-secret-007"),
 		TimeZone:   env.GetValue("TIMEZONE", "Asia/Jakarta"),
+		BaseURL:    env.GetValue("BASE_URL", ""),
 	}
 }
 
 //GetApp returns a new App instance
 func GetApp() App {
 	return app
+}
+
+const ImagePath = "/qr-payment"
+
+//GetBaseQrCodeURL get base qr code url
+func GetBaseQrCodeURL() string {
+	return app.BaseURL + ImagePath
 }

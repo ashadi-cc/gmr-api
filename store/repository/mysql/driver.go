@@ -18,6 +18,11 @@ func (d MysqlDriver) GetBillingRepository() repository.Billing {
 	return NewBillingRepo()
 }
 
+//GetBillingRepository returns mysql repository.Payment instance
+func (d MysqlDriver) GetPaymentRepository() repository.Payment {
+	return NewPaymentRepo()
+}
+
 func init() {
 	store.Register("mysql", &MysqlDriver{})
 }

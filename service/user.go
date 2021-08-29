@@ -29,15 +29,17 @@ type IUserService interface {
 
 //UserService impelmenting IUserService
 type UserService struct {
-	userRepo repository.User
-	billRepo repository.Billing
+	userRepo    repository.User
+	billRepo    repository.Billing
+	paymentRepo repository.Payment
 }
 
 //NewUserService return a new UserService instance
 func NewUserService() IUserService {
 	return &UserService{
-		userRepo: repo().GetUserRepository(),
-		billRepo: repo().GetBillingRepository(),
+		userRepo:    repo().GetUserRepository(),
+		billRepo:    repo().GetBillingRepository(),
+		paymentRepo: repo().GetPaymentRepository(),
 	}
 }
 
@@ -107,11 +109,19 @@ func (service *UserService) GetBilling(user model.User) (model.BillingInfo, erro
 		return bInfo, err
 	}
 
+	payments, err := service.paymentRepo.All(context.Background())
+	if err != nil {
+		return bInfo, err
+	}
+
 	thisMonthBill := model.BillRepoToBilling(thisMonth)
 	otherMonthBill := model.BillRepoToBilling(otherBill)
+	paymentsList := model.PaymentRepoToPayments(payments)
+
 	bInfo = model.BillingInfo{
-		ThisMonth: model.ItemBilling{Data: thisMonthBill.Display(), Total: thisMonthBill.TotalAmount()},
-		OtherBill: model.ItemBilling{Data: otherMonthBill.Display(), Total: otherMonthBill.TotalAmount()},
+		ThisMonth:     model.ItemBilling{Data: thisMonthBill.Display(), Total: thisMonthBill.TotalAmount()},
+		OtherBill:     model.ItemBilling{Data: otherMonthBill.Display(), Total: otherMonthBill.TotalAmount()},
+		PaymentMethod: paymentsList,
 	}
 
 	return bInfo, nil
