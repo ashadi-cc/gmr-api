@@ -4,11 +4,16 @@ import (
 	"api-gmr/auth"
 	"api-gmr/config"
 	"api-gmr/model"
+	repofile "api-gmr/storage/repo"
 	"api-gmr/store/repository"
 	"api-gmr/util"
 	"context"
 	"database/sql"
+	"fmt"
+	"io"
+	"mime/multipart"
 	"net/http"
+	"path/filepath"
 	"time"
 
 	"github.com/pkg/errors"
@@ -25,21 +30,25 @@ type IUserService interface {
 
 	//GetBilling returns billings for particular user
 	GetBilling(user model.User) (model.BillingInfo, error)
+
+	Upload(user model.User, fileUpload io.Reader, handler *multipart.FileHeader, description string) error
 }
 
 //UserService impelmenting IUserService
 type UserService struct {
-	userRepo    repository.User
-	billRepo    repository.Billing
-	paymentRepo repository.Payment
+	userRepo       repository.User
+	billRepo       repository.Billing
+	paymentRepo    repository.Payment
+	storageService repofile.FileRepo
 }
 
 //NewUserService return a new UserService instance
 func NewUserService() IUserService {
 	return &UserService{
-		userRepo:    repo().GetUserRepository(),
-		billRepo:    repo().GetBillingRepository(),
-		paymentRepo: repo().GetPaymentRepository(),
+		userRepo:       repo().GetUserRepository(),
+		billRepo:       repo().GetBillingRepository(),
+		paymentRepo:    repo().GetPaymentRepository(),
+		storageService: fstorage(),
 	}
 }
 
@@ -125,4 +134,27 @@ func (service *UserService) GetBilling(user model.User) (model.BillingInfo, erro
 	}
 
 	return bInfo, nil
+}
+
+func (service *UserService) Upload(user model.User, uploadedFile io.Reader, handler *multipart.FileHeader, description string) error {
+	if err := util.CheckIsImage(uploadedFile); err != nil {
+		return util.NewUserError(http.StatusBadRequest, "file must be an image", err)
+	}
+
+	localTime, err := util.TimeIn(time.Now(), config.GetApp().TimeZone)
+	if err != nil {
+		return err
+	}
+
+	timeStr := localTime.Format("2006-01-02")
+	fileExt := filepath.Ext(handler.Filename)
+	fileName := fmt.Sprintf("%s-%s-%d%s", user.Username, timeStr, localTime.Unix(), fileExt)
+
+	targetFile, err := service.storageService.Store(uploadedFile, fileName)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(targetFile)
+	return nil
 }

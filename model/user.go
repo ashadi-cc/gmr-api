@@ -61,6 +61,10 @@ func (user *User) SetGroup(group string) {
 	user.Group = group
 }
 
+func (user *User) SetUsername(username string) {
+	user.Username = username
+}
+
 //UserInput to hold user data
 type UserInput struct {
 	Email    string `json:"email" validate:"email,required"`

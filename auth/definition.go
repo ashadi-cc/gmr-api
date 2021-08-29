@@ -23,7 +23,8 @@ var (
 //Claim containts common jwt standar claims and user data
 type Claim struct {
 	jwt.StandardClaims
-	UserId int    `json:"user_id"`
-	Email  string `json:"email"`
-	Group  string `json:"group"`
+	UserId   int    `json:"user_id"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Group    string `json:"group"`
 }

@@ -52,9 +52,10 @@ func (service *AuthService) Validate(data model.UserLogin) (model.User, error) {
 	}
 
 	user = model.User{
-		Id:    dbUser.GetUserID(),
-		Email: dbUser.GetEmail(),
-		Group: dbUser.GetGroup(),
+		Id:       dbUser.GetUserID(),
+		Username: dbUser.GetUsername(),
+		Email:    dbUser.GetEmail(),
+		Group:    dbUser.GetGroup(),
 	}
 
 	return user, nil

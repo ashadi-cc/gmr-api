@@ -13,9 +13,11 @@ type UserInterface interface {
 	GetUserID() int
 	GetEmail() string
 	GetGroup() string
+	GetUsername() string
 	SetUserId(id int)
 	SetEmail(email string)
 	SetGroup(group string)
+	SetUsername(string)
 }
 
 //CreateToken returns string token by given user model
@@ -25,9 +27,10 @@ func CreateToken(user UserInterface) (string, error) {
 			Issuer:    AppName,
 			ExpiresAt: time.Now().Add(ExpiredDuration).Unix(),
 		},
-		UserId: user.GetUserID(),
-		Email:  user.GetEmail(),
-		Group:  user.GetGroup(),
+		UserId:   user.GetUserID(),
+		Email:    user.GetEmail(),
+		Group:    user.GetGroup(),
+		Username: user.GetUsername(),
 	}
 
 	token := jwt.NewWithClaims(
@@ -73,6 +76,10 @@ func ValidateToken(tokenString string) (jwt.MapClaims, error) {
 func ClaimToUser(claim jwt.MapClaims, user UserInterface) {
 	if userId, ok := claim["user_id"].(float64); ok {
 		user.SetUserId(int(userId))
+	}
+
+	if username, ok := claim["username"].(string); ok {
+		user.SetUsername(username)
 	}
 
 	if userEmail, ok := claim["email"].(string); ok {

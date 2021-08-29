@@ -7,13 +7,7 @@ import (
 	"api-gmr/util"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
-	"os"
-	"path/filepath"
-	"strings"
-
-	"github.com/gabriel-vasile/mimetype"
 )
 
 //User represents User Controller
@@ -111,11 +105,11 @@ func (u User) Billing(w http.ResponseWriter, r *http.Request) {
 func (u User) Upload(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	// userCtx, ok := r.Context().Value(middleware.UserKey).(model.User)
-	// if !ok {
-	// 	util.PrintUserError(w, fmt.Errorf("can't load user from context"))
-	// 	return
-	// }
+	userCtx, ok := r.Context().Value(middleware.UserKey).(model.User)
+	if !ok {
+		util.PrintUserError(w, fmt.Errorf("can't load user from context"))
+		return
+	}
 
 	r.Body = http.MaxBytesReader(w, r.Body, 2*1024*1024) // 2 Mb
 	if err := r.ParseMultipartForm(u.maxMemory); err != nil {
@@ -130,35 +124,12 @@ func (u User) Upload(w http.ResponseWriter, r *http.Request) {
 	}
 	defer uploadedFile.Close()
 
-	mType, err := mimetype.DetectReader(uploadedFile)
+	description := r.FormValue("description")
+	err = u.userService.Upload(userCtx, uploadedFile, handler, description)
 	if err != nil {
 		util.PrintUserError(w, err)
 		return
 	}
-
-	if !strings.HasPrefix(mType.String(), "image") {
-		util.PrintUserError(w, util.NewUserError(http.StatusBadRequest, "file must an image", nil))
-		return
-	}
-
-	filename := handler.Filename //you should change the name
-	//fileExt := filepath.Ext(handler.Filename)
-
-	dir, _ := os.Getwd()
-	fileLocation := filepath.Join(dir, "data", "upload", filename)
-	targetFile, err := os.OpenFile(fileLocation, os.O_WRONLY|os.O_CREATE, 0666)
-	if err != nil {
-		util.PrintUserError(w, err)
-		return
-	}
-	defer targetFile.Close()
-
-	if _, err := io.Copy(targetFile, uploadedFile); err != nil {
-		util.PrintUserError(w, err)
-		return
-	}
-
-	// description := r.FormValue("description")
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(model.CommonMessage{Success: true})

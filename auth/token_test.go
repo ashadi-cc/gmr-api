@@ -9,9 +9,10 @@ import (
 )
 
 type userTest struct {
-	Id    int
-	Email string
-	Group string
+	Id       int
+	Email    string
+	Group    string
+	Username string
 }
 
 func (user userTest) GetUserID() int {
@@ -36,6 +37,14 @@ func (user *userTest) SetEmail(email string) {
 
 func (user *userTest) SetGroup(group string) {
 	user.Group = group
+}
+
+func (user *userTest) SetUsername(username string) {
+	user.Username = username
+}
+
+func (user *userTest) GetUsername() string {
+	return user.Username
 }
 
 func TestCreateToken(t *testing.T) {

@@ -31,6 +31,10 @@ type App struct {
 	TimeZone string
 	//BaseURL base domain url
 	BaseURL string
+	//BaseImageDir base dir for upload iamge
+	BaseImageDir string
+	//StorageDriver storage driver
+	StorageDriver string
 }
 
 var app App
@@ -42,17 +46,19 @@ func init() {
 	}
 
 	app = App{
-		AppName:    env.GetValue("APP_NAME", "APP_GMR"),
-		AppPort:    env.GetValue("APP_PORT", "8080"),
-		DbHost:     env.GetValue("DB_HOST", "localhost"),
-		DbPort:     env.GetValue("DB_PORT", "3306"),
-		DbUser:     env.GetValue("DB_USER", "user"),
-		DbPassword: env.GetValue("DB_PASSWORD", "password"),
-		DbName:     env.GetValue("DB_NAME", "dbname"),
-		DbDriver:   env.GetValue("DB_DRIVER", "mysql"),
-		JwtSecret:  env.GetValue("JWT_SECRET", "jwt-secret-007"),
-		TimeZone:   env.GetValue("TIMEZONE", "Asia/Jakarta"),
-		BaseURL:    env.GetValue("BASE_URL", ""),
+		AppName:       env.GetValue("APP_NAME", "APP_GMR"),
+		AppPort:       env.GetValue("APP_PORT", "8080"),
+		DbHost:        env.GetValue("DB_HOST", "localhost"),
+		DbPort:        env.GetValue("DB_PORT", "3306"),
+		DbUser:        env.GetValue("DB_USER", "user"),
+		DbPassword:    env.GetValue("DB_PASSWORD", "password"),
+		DbName:        env.GetValue("DB_NAME", "dbname"),
+		DbDriver:      env.GetValue("DB_DRIVER", "mysql"),
+		JwtSecret:     env.GetValue("JWT_SECRET", "jwt-secret-007"),
+		TimeZone:      env.GetValue("TIMEZONE", "Asia/Jakarta"),
+		BaseURL:       env.GetValue("BASE_URL", ""),
+		BaseImageDir:  env.GetValue("BASE_IMG_DIR", "./data/upload/"),
+		StorageDriver: env.GetValue("STORAGE_DRIVER", "file"),
 	}
 }
 
