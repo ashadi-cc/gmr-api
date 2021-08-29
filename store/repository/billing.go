@@ -35,5 +35,5 @@ type Billing interface {
 	//GetBillWithFilter returns billings by given filter payload
 	GetBillWithFilter(ctx context.Context, filter BillingFilter) ([]BillingModel, error)
 	//GetOtherBillWithFilter returns billings by given filter payload
-	GetOtherBillWithFilter(ctx context.Context, filter BillingFilter) ([]BillingModel, error)
+	GetOtherBillWithFilter(ctx context.Context, userId, year, month int) ([]BillingModel, error)
 }

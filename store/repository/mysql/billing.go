@@ -71,6 +71,29 @@ func (repo billingRepo) GetBillWithFilter(ctx context.Context, filter repository
 }
 
 //GetOtherBillWithFilter implementing repository.Billing.GetOtherBillWithFilter
-func (repo billingRepo) GetOtherBillWithFilter(ctx context.Context, filter repository.BillingFilter) ([]repository.BillingModel, error) {
-	return nil, nil
+func (repo billingRepo) GetOtherBillWithFilter(ctx context.Context, userId, year, month int) ([]repository.BillingModel, error) {
+	whereClause := "WHERE user_id = ? AND (year <> ? AND month <> ?) AND status = 'B'"
+
+	query := fmt.Sprintf("SELECT billing_name, year, month, SUM(amount) as amount FROM billing_users %s GROUP BY billing_name,year,month", whereClause)
+	statement, err := repo.db.PrepareContext(ctx, query)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed preparing query: %s", query)
+	}
+	defer statement.Close()
+
+	rows, err := statement.QueryContext(ctx, userId, year, month)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed execute query: %s", query)
+	}
+
+	var bs billingModels
+	for rows.Next() {
+		var b billingModel
+		if err := rows.Scan(&b.bilingName, &b.year, &b.month, &b.amount); err != nil {
+			return nil, errors.Wrap(err, "failed scanning rows")
+		}
+		bs = append(bs, b)
+	}
+
+	return bs, nil
 }

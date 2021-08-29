@@ -94,14 +94,24 @@ func (service *UserService) GetBilling(user model.User) (model.BillingInfo, erro
 		UserID: user.GetUserID(),
 		Status: "B",
 	}
-
 	thisMonth, err := service.billRepo.GetBillWithFilter(context.Background(), billingFilter)
 	if err != nil {
 		return bInfo, err
 	}
 
+	otherBill, err := service.billRepo.GetOtherBillWithFilter(context.Background(),
+		user.GetUserID(),
+		localTime.Year(),
+		int(localTime.Month()))
+	if err != nil {
+		return bInfo, err
+	}
+
+	thisMonthBill := model.BillRepoToBilling(thisMonth)
+	otherMonthBill := model.BillRepoToBilling(otherBill)
 	bInfo = model.BillingInfo{
-		ThisMonth: model.BillRepoToBilling(thisMonth),
+		ThisMonth: model.ItemBilling{Data: thisMonthBill.Display(), Total: thisMonthBill.TotalAmount()},
+		OtherBill: model.ItemBilling{Data: otherMonthBill.Display(), Total: otherMonthBill.TotalAmount()},
 	}
 
 	return bInfo, nil

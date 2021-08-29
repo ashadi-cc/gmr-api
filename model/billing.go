@@ -1,6 +1,8 @@
 package model
 
-import "api-gmr/store/repository"
+import (
+	"api-gmr/store/repository"
+)
 
 type BillingFilter struct {
 	Year   int
@@ -27,22 +29,55 @@ func (f BillingFilter) GetStatus() string {
 
 type Billing struct {
 	Name   string  `json:"name"`
-	Status string  `json:"status"`
+	Status string  `json:"status,omitempty"`
 	Amount float64 `json:"amount"`
+	Year   int     `json:"year,omitempty"`
+	Month  int     `json:"month,omitempty"`
+}
+
+func (b Billing) Display() Billing {
+	b.Status = ""
+	b.Year = 0
+	b.Month = 0
+	return b
+}
+
+type Billings []Billing
+
+func (b Billings) Display() Billings {
+	for idx, i := range b {
+		b[idx] = i.Display()
+	}
+	return b
+}
+
+func (b Billings) TotalAmount() float64 {
+	var total float64
+	for _, i := range b {
+		total = total + i.Amount
+	}
+	return total
+}
+
+type ItemBilling struct {
+	Data  Billings `json:"items"`
+	Total float64  `json:"total"`
 }
 
 type BillingInfo struct {
-	ThisMonth []Billing `json:"this_month"`
-	Total     float64   `json:"total"`
+	ThisMonth ItemBilling `json:"this_month"`
+	OtherBill ItemBilling `json:"other_month"`
 }
 
-func BillRepoToBilling(i []repository.BillingModel) []Billing {
-	var b []Billing
+func BillRepoToBilling(i []repository.BillingModel) Billings {
+	var b Billings
 	for _, item := range i {
 		bi := Billing{
 			Name:   item.GetName(),
 			Status: item.GetStatus(),
 			Amount: item.GetAmount(),
+			Year:   item.GetYear(),
+			Month:  item.GetMonth(),
 		}
 		b = append(b, bi)
 	}
