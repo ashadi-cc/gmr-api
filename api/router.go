@@ -37,4 +37,5 @@ func addUserRouter(r *mux.Router) {
 	r.HandleFunc("/user-info", c.Info).Methods(http.MethodGet)
 	r.HandleFunc("/user-update", c.Update).Methods(http.MethodPost)
 	r.HandleFunc("/user-billing", c.Billing).Methods(http.MethodGet)
+	r.HandleFunc("/user-upload", c.Upload).Methods(http.MethodPost)
 }
