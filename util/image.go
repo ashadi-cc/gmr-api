@@ -1,6 +1,7 @@
 package util
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"strings"
@@ -9,15 +10,22 @@ import (
 )
 
 //CheckIsImage check the file is image
-func CheckIsImage(f io.Reader) error {
-	mType, err := mimetype.DetectReader(f)
+func CheckIsImage(input io.Reader) (io.Reader, error) {
+	// header will store the bytes mimetype uses for detection.
+	header := bytes.NewBuffer(nil)
+
+	// After DetectReader, the data read from input is copied into header.
+	mType, err := mimetype.DetectReader(io.TeeReader(input, header))
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if !strings.HasPrefix(mType.String(), "image") {
-		return fmt.Errorf("file is not an image")
+		return nil, fmt.Errorf("file is not an image")
 	}
 
-	return nil
+	// Concatenate back the header to the rest of the file.
+	// recycled now contains the complete, original data.
+	recycled := io.MultiReader(header, input)
+	return recycled, nil
 }

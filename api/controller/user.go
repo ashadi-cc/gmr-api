@@ -111,7 +111,7 @@ func (u User) Upload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	r.Body = http.MaxBytesReader(w, r.Body, 2*1024*1024) // 2 Mb
+	r.Body = http.MaxBytesReader(w, r.Body, 3*1024*1024) // 3 Mb
 	if err := r.ParseMultipartForm(u.maxMemory); err != nil {
 		util.PrintUserError(w, err)
 		return

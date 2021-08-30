@@ -137,7 +137,8 @@ func (service *UserService) GetBilling(user model.User) (model.BillingInfo, erro
 }
 
 func (service *UserService) Upload(user model.User, uploadedFile io.Reader, handler *multipart.FileHeader, description string) error {
-	if err := util.CheckIsImage(uploadedFile); err != nil {
+	recycledReader, err := util.CheckIsImage(uploadedFile)
+	if err != nil {
 		return util.NewUserError(http.StatusBadRequest, "file must be an image", err)
 	}
 
@@ -150,7 +151,7 @@ func (service *UserService) Upload(user model.User, uploadedFile io.Reader, hand
 	fileExt := filepath.Ext(handler.Filename)
 	fileName := fmt.Sprintf("%s-%s-%d%s", user.Username, timeStr, localTime.Unix(), fileExt)
 
-	targetFile, err := service.storageService.Store(uploadedFile, fileName)
+	targetFile, err := service.storageService.Store(recycledReader, fileName)
 	if err != nil {
 		return err
 	}
