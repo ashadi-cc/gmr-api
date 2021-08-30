@@ -36,4 +36,6 @@ type Billing interface {
 	GetBillWithFilter(ctx context.Context, filter BillingFilter) ([]BillingModel, error)
 	//GetOtherBillWithFilter returns billings by given filter payload
 	GetOtherBillWithFilter(ctx context.Context, userId, year, month int) ([]BillingModel, error)
+	//StoreBillingFile stored billing image by given userid
+	StoreBillingFile(ctx context.Context, userId int, driver, fileURL, description string) error
 }

@@ -11,8 +11,10 @@ import (
 	"database/sql"
 	"fmt"
 	"io"
+	"log"
 	"mime/multipart"
 	"net/http"
+	"os"
 	"path/filepath"
 	"time"
 
@@ -156,6 +158,14 @@ func (service *UserService) Upload(user model.User, uploadedFile io.Reader, hand
 		return err
 	}
 
-	fmt.Println(targetFile)
+	err = service.billRepo.StoreBillingFile(context.Background(), user.Id, config.GetApp().StorageDriver, targetFile, description)
+	if err != nil {
+		errDelete := os.Remove(targetFile)
+		if errDelete != nil {
+			log.Println(errDelete.Error())
+		}
+		return err
+	}
+
 	return nil
 }

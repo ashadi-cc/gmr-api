@@ -97,3 +97,18 @@ func (repo billingRepo) GetOtherBillWithFilter(ctx context.Context, userId, year
 
 	return bs, nil
 }
+
+//StoreBillingFile implementing repository.Billing.StoreBillingFile
+func (repo billingRepo) StoreBillingFile(ctx context.Context, userId int, driver, fileURL, description string) error {
+	query := "INSERT INTO billing_files(user_id, driver, file_url, description, created_at) VALUES(?, ?, ?, ?, NOW())"
+	statement, err := repo.db.PrepareContext(ctx, query)
+	if err != nil {
+		return errors.Wrapf(err, "failed preparing query: %s", query)
+	}
+	defer statement.Close()
+
+	if _, err = statement.ExecContext(ctx, userId, driver, fileURL, description); err != nil {
+		return errors.Wrap(err, "failed insert into billing_files")
+	}
+	return nil
+}

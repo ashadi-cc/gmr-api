@@ -9,7 +9,7 @@ import (
 	"github.com/gabriel-vasile/mimetype"
 )
 
-//CheckIsImage check the file is image
+//CheckIsImage check the file is an image. returns of recycled reader
 func CheckIsImage(input io.Reader) (io.Reader, error) {
 	// header will store the bytes mimetype uses for detection.
 	header := bytes.NewBuffer(nil)
