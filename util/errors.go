@@ -41,12 +41,12 @@ func PrintUserError(w http.ResponseWriter, err error) {
 
 		w.WriteHeader(uError.code)
 		data := model.CommonMessage{Success: false, Message: uError.message}.WithError(uError.err)
-		json.NewEncoder(w).Encode(data)
+		_ = json.NewEncoder(w).Encode(data)
 		return
 	}
 
 	log.Println(err)
 	w.WriteHeader(http.StatusInternalServerError)
 	data := model.CommonMessage{Success: false, Message: "internal server error"}.WithError(err)
-	json.NewEncoder(w).Encode(data)
+	_ = json.NewEncoder(w).Encode(data)
 }

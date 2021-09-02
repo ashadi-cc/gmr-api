@@ -1,6 +1,8 @@
 package model
 
 import (
+	"log"
+
 	"github.com/go-playground/locales/en"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
@@ -21,7 +23,10 @@ func init() {
 	var ok bool
 	trans, ok = uni.GetTranslator("en")
 	if ok {
-		en_translations.RegisterDefaultTranslations(validate, trans)
+		err := en_translations.RegisterDefaultTranslations(validate, trans)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	}
 
 }
