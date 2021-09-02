@@ -33,6 +33,7 @@ type IUserService interface {
 	//GetBilling returns billings for particular user
 	GetBilling(user model.User) (model.BillingInfo, error)
 
+	//Upload store uploaded user image
 	Upload(user model.User, fileUpload io.Reader, handler *multipart.FileHeader, description string) error
 }
 
@@ -138,6 +139,7 @@ func (service *UserService) GetBilling(user model.User) (model.BillingInfo, erro
 	return bInfo, nil
 }
 
+//GetBilling implementing IUserService.Upload
 func (service *UserService) Upload(user model.User, uploadedFile io.Reader, handler *multipart.FileHeader, description string) error {
 	recycledReader, err := util.CheckIsImage(uploadedFile)
 	if err != nil {
