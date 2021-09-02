@@ -41,7 +41,7 @@ func (u User) Info(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(model.CommonMessage{Success: true, Data: userInfo})
+	_ = json.NewEncoder(w).Encode(model.CommonMessage{Success: true, Data: userInfo})
 
 }
 
@@ -78,7 +78,7 @@ func (u User) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(model.CommonMessage{Success: true, Message: "user updated"})
+	_ = json.NewEncoder(w).Encode(model.CommonMessage{Success: true, Message: "user updated"})
 }
 
 //Billing user billing handler
@@ -98,7 +98,7 @@ func (u User) Billing(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(model.CommonMessage{Success: true, Data: data})
+	_ = json.NewEncoder(w).Encode(model.CommonMessage{Success: true, Data: data})
 }
 
 //Upload upload image user handler
@@ -132,5 +132,5 @@ func (u User) Upload(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(model.CommonMessage{Success: true})
+	_ = json.NewEncoder(w).Encode(model.CommonMessage{Success: true})
 }

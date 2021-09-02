@@ -53,5 +53,5 @@ func (l Login) Authenticate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(model.CommonMessage{Success: true, Data: tokenString})
+	_ = json.NewEncoder(w).Encode(model.CommonMessage{Success: true, Data: tokenString})
 }
