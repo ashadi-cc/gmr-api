@@ -17,6 +17,8 @@ const (
 	UserKey ContextKey = "user"
 	//LoginPath represents login route path
 	LoginPath string = "/login"
+	//SwaggerPath represents swagger api documentation path
+	SwaggerPath string = "/swagger"
 	//AuthHeaderKey represents Authorization header key value
 	AuthHeaderKey string = "Authorization"
 	//BearerKey represents token header key method
@@ -27,6 +29,11 @@ const (
 func Auth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == LoginPath {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		if strings.HasPrefix(r.URL.Path, SwaggerPath) {
 			next.ServeHTTP(w, r)
 			return
 		}

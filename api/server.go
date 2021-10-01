@@ -3,6 +3,7 @@ package api
 import (
 	"api-gmr/config"
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -19,7 +20,7 @@ func Run() {
 	// log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), r))
 
 	srv := &http.Server{
-		Addr: "0.0.0.0:" + port,
+		Addr: fmt.Sprintf("%s:%s", config.GetApp().ApiHost, port),
 		// Good practice to set timeouts to avoid Slowloris attacks.
 		WriteTimeout: time.Second * 15,
 		ReadTimeout:  time.Second * 15,

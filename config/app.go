@@ -13,6 +13,8 @@ type App struct {
 	AppName string
 	//AppPort port will be used for api sevice
 	AppPort string
+	//ApiHost host to be used for served api service
+	ApiHost string
 	//DbHost database host value
 	DbHost string
 	//DbPort database port value
@@ -59,6 +61,7 @@ func init() {
 		BaseURL:       env.GetValue("BASE_URL", ""),
 		BaseImageDir:  env.GetValue("BASE_IMG_DIR", "./data/upload/"),
 		StorageDriver: env.GetValue("STORAGE_DRIVER", "file"),
+		ApiHost:       env.GetValue("API_HOST", "127.0.0.1"),
 	}
 }
 

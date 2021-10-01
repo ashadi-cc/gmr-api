@@ -24,6 +24,14 @@ func NewUser(userService service.IUserService) *User {
 	}
 }
 
+//@Summary userinfo endpoint
+//@Description retrieve user information
+//@Tags user
+//@Param Authorization header string true "jwt token with Bearer prefix"
+//@Accept json
+//@Produce json
+//@Success 200 {object} model.CommonMessage
+//@Router /user-info [get]
 //Info User info handler method
 func (u User) Info(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -45,6 +53,15 @@ func (u User) Info(w http.ResponseWriter, r *http.Request) {
 
 }
 
+//@Summary user update endpoint
+//@Description update user information by given payload
+//@Tags user
+//@Param Authorization header string true "jwt token with Bearer prefix"
+//@Param data body model.UserInput true "user payload"
+//@Accept json
+//@Produce json
+//@Success 200 {object} model.CommonMessage
+//@Router /user-update [post]
 //Update User update hander method
 func (u User) Update(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -81,6 +98,14 @@ func (u User) Update(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(model.CommonMessage{Success: true, Message: "user updated"})
 }
 
+//@Summary user billing endpoint
+//@Description billing user information
+//@Tags user
+//@Param Authorization header string true "jwt token with Bearer prefix"
+//@Accept json
+//@Produce json
+//@Success 200 {object} model.CommonMessage
+//@Router /user-billing [get]
 //Billing user billing handler
 func (u User) Billing(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -101,6 +126,16 @@ func (u User) Billing(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(model.CommonMessage{Success: true, Data: data})
 }
 
+//@Summary user upload image endpoint
+//@Description upload image by user
+//@Tags user
+//@Param Authorization header string true "jwt token with Bearer prefix"
+//@Param file body string true "file to be upload in bytes"
+//@Param description body string true "description of image"
+//@Accept x-www-form-urlencoded
+//@Produce json
+//@Success 200 {object} model.CommonMessage
+//@Router /user-upload [post]
 //Upload upload image user handler
 func (u User) Upload(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")

@@ -20,6 +20,14 @@ func NewLogin(authService service.IAuthService) *Login {
 	}
 }
 
+//@Summary Login endpoint
+//@Description retrieve jwt token by given username and password
+//@Tags login
+//@Param data body model.UserLogin true "user payload"
+//@Accept json
+//@Produce json
+//@Success 200 {object} model.CommonMessage
+//@Router /login [post]
 //Authenticate Authenticate handler
 func (l Login) Authenticate(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")

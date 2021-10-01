@@ -1,0 +1,170 @@
+basePath: /v1/api
+definitions:
+  model.CommonMessage:
+    properties:
+      data: {}
+      errors:
+        items:
+          type: string
+        type: array
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  model.UserInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    type: object
+  model.UserLogin:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+host: gmr.ashadi-ch.xyz
+info:
+  contact:
+    name: Ashadi
+    url: https://ashadi-ch.xyz
+  description: GMR API endpoint documentation
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: GMR API
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: retrieve jwt token by given username and password
+      parameters:
+      - description: user payload
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonMessage'
+      summary: Login endpoint
+      tags:
+      - login
+  /user-billing:
+    get:
+      consumes:
+      - application/json
+      description: billing user information
+      parameters:
+      - description: jwt token with Bearer prefix
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonMessage'
+      summary: user billing endpoint
+      tags:
+      - user
+  /user-info:
+    get:
+      consumes:
+      - application/json
+      description: retrieve user information
+      parameters:
+      - description: jwt token with Bearer prefix
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonMessage'
+      summary: userinfo endpoint
+      tags:
+      - user
+  /user-update:
+    post:
+      consumes:
+      - application/json
+      description: update user information by given payload
+      parameters:
+      - description: jwt token with Bearer prefix
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: user payload
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonMessage'
+      summary: user update endpoint
+      tags:
+      - user
+  /user-upload:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: upload image by user
+      parameters:
+      - description: jwt token with Bearer prefix
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: file to be upload in bytes
+        in: body
+        name: file
+        required: true
+        schema:
+          type: primitive
+      - description: description of image
+        in: body
+        name: description
+        required: true
+        schema:
+          type: primitive
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonMessage'
+      summary: user upload image endpoint
+      tags:
+      - user
+swagger: "2.0"
