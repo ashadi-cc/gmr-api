@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"api-gmr/auth"
+	"api-gmr/config"
 	"api-gmr/model"
 	"context"
 	"log"
@@ -28,12 +29,13 @@ const (
 // Auth represents middleware with validate jwt-token.
 func Auth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path == LoginPath {
+		baseApi := config.GetApp().BaseApi
+		if r.URL.Path == baseApi+LoginPath {
 			next.ServeHTTP(w, r)
 			return
 		}
 
-		if strings.HasPrefix(r.URL.Path, SwaggerPath) {
+		if strings.HasPrefix(r.URL.Path, baseApi+SwaggerPath) {
 			next.ServeHTTP(w, r)
 			return
 		}

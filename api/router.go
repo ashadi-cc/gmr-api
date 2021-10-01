@@ -3,6 +3,7 @@ package api
 import (
 	"api-gmr/api/controller"
 	"api-gmr/api/middleware"
+	"api-gmr/config"
 	"api-gmr/service"
 	"net/http"
 
@@ -46,18 +47,23 @@ func addRouters(r *mux.Router) {
 }
 
 func addLoginRouter(r *mux.Router) {
+	baseApi := config.GetApp().BaseApi
 	c := controller.NewLogin(service.NewAuthService())
-	r.HandleFunc("/login", c.Authenticate).Methods(http.MethodPost)
+	r.HandleFunc(baseApi+"/login", c.Authenticate).Methods(http.MethodPost)
 }
 
 func addUserRouter(r *mux.Router) {
 	c := controller.NewUser(service.NewUserService())
-	r.HandleFunc("/user-info", c.Info).Methods(http.MethodGet)
-	r.HandleFunc("/user-update", c.Update).Methods(http.MethodPost)
-	r.HandleFunc("/user-billing", c.Billing).Methods(http.MethodGet)
-	r.HandleFunc("/user-upload", c.Upload).Methods(http.MethodPost)
+
+	baseApi := config.GetApp().BaseApi
+	r.HandleFunc(baseApi+"/user-info", c.Info).Methods(http.MethodGet)
+	r.HandleFunc(baseApi+"/user-update", c.Update).Methods(http.MethodPost)
+	r.HandleFunc(baseApi+"/user-billing", c.Billing).Methods(http.MethodGet)
+	r.HandleFunc(baseApi+"/user-upload", c.Upload).Methods(http.MethodPost)
 }
 
+//https://github.com/swaggo/http-swagger/issues/10
 func addSwaggerRouter(r *mux.Router) {
-	r.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler)
+	baseApi := config.GetApp().BaseApi
+	r.PathPrefix(baseApi + "/swagger").Handler(httpSwagger.WrapHandler)
 }

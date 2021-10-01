@@ -37,6 +37,8 @@ type App struct {
 	BaseImageDir string
 	//StorageDriver storage driver
 	StorageDriver string
+	//BaseApi base api endpoing
+	BaseApi string
 }
 
 var app App
@@ -62,6 +64,7 @@ func init() {
 		BaseImageDir:  env.GetValue("BASE_IMG_DIR", "./data/upload/"),
 		StorageDriver: env.GetValue("STORAGE_DRIVER", "file"),
 		ApiHost:       env.GetValue("API_HOST", "127.0.0.1"),
+		BaseApi:       env.GetValue("BASE_API", "/v1/api"),
 	}
 }
 
