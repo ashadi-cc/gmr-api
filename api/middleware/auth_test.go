@@ -52,21 +52,21 @@ func TestAuth(t *testing.T) {
 		{
 			name: "login page",
 			args: args{
-				route:  "/login",
+				route:  "/v1/api/login",
 				header: header{"auth", "noheader"},
 			},
 			want: want{http.StatusOK},
 		}, {
 			name: "invalid token",
 			args: args{
-				route:  "/user-info",
+				route:  "/v1/api/user-info",
 				header: header{"Authorization", "Test"},
 			},
 			want: want{http.StatusBadRequest},
 		}, {
 			name: "valid token",
 			args: args{
-				route:  "/user-info",
+				route:  "/v1/api/user-info",
 				header: header{"Authorization", "Bearer " + createTestToken(2, "ashadi@gmail.com", "user")},
 			},
 			want: want{http.StatusOK},
