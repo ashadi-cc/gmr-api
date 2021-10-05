@@ -1,3 +1,5 @@
+//go:generate mockery --name=PaymentModel
+//go:generate mockery --name=Payment
 package repository
 
 import (

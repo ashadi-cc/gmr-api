@@ -1,3 +1,5 @@
+//go:generate mockery --name=User
+//go:generate mockery --name=UserModel
 package repository
 
 import "context"

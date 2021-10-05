@@ -1,3 +1,6 @@
+//go:generate mockery --name=BillingModel
+//go:generate mockery --name=Billing
+
 package repository
 
 import "context"
