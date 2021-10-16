@@ -3,6 +3,7 @@ module api-gmr
 go 1.16
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.5.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gabriel-vasile/mimetype v1.3.1
 	github.com/go-openapi/jsonreference v0.19.6 // indirect
