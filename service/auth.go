@@ -1,3 +1,5 @@
+//go:generate mockery --name=IAuthService
+
 package service
 
 import (
