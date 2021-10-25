@@ -1,4 +1,4 @@
-## Simple API with jwt token auth
+## GMR REST API SERVICE
 - cp .env-example .env 
 - make server
 
