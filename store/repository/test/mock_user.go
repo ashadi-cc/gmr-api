@@ -17,6 +17,7 @@ const (
 	UpdateEmailandPasswordMethod = "UpdateEmailandPassword"
 )
 
+//User represent User mock repository
 type User struct {
 	t *testing.T
 	*mocks.User
